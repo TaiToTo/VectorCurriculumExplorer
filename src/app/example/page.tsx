@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { WeaviateField } from "weaviate-client";
 import { useState } from "react";
 
-export default function Main() {
+export default function Example() {
   const [data, setData] = useState<WeaviateField[]>([]);
   useEffect(() => {
     getText("data").then((data) => setData(data));
