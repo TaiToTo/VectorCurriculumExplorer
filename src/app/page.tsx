@@ -2,10 +2,15 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 
+import { getText } from "@/api/weaviate";
 import React, { PureComponent } from "react";
 import { Treemap } from "recharts";
 
-const data = [
+import { useEffect } from "react";
+import { WeaviateField } from "weaviate-client";
+import { useState } from "react";
+
+const tree_data = [
   {
     name: "axis",
     children: [
@@ -220,9 +225,21 @@ class CustomizedContent extends PureComponent {
 }
 
 export default function App() {
+
+  const query = "Data literacy";
+  // let results: string[] = [];
+
+  const [data, setData] = useState<WeaviateField[]>([]);
+  useEffect(() => {
+    getText(query).then((data) => setData(data));
+  }, []);
+
   return (
     <div className={styles.page}>
       <main className={styles.main}>
+          {data.map((value, i) => (
+            <p key={i}>{String(value)}</p>
+          ))}
         <Image
           className={styles.logo}
           src="/next.svg"
@@ -234,7 +251,7 @@ export default function App() {
         <Treemap
           width={400}
           height={200}
-          data={data}
+          data={tree_data}
           dataKey="size"
           stroke="#fff"
           fill="#8884d8"

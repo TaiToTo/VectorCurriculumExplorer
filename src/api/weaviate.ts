@@ -15,7 +15,7 @@ export const getText = async (query: string) => {
 
   const collections = client.collections.get("CurriculumDemo");
   const response = await collections.query.nearText(query, {
-    limit: 30,
+    limit: 5,
   });
 
   client.close();
