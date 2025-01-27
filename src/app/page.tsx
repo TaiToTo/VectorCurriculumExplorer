@@ -150,6 +150,12 @@ const COLORS = [
   "#A5D297",
   "#E2CF45",
   "#F8C12D",
+  "#FF8042",
+  "#FFBB28",
+  "#FF8042",
+  "#00C49F",
+  "#FFBB28",
+  "#FF8042",
 ];
 
 class CustomizedContent extends PureComponent {
@@ -215,7 +221,7 @@ class CustomizedContent extends PureComponent {
           className={styles.treemap__rect}
         >
           <rect x={x} y={y} width={width} height={height} />
-          <text x={x} y={y} fill="#fff" fontSize={11}>
+          <text x={x} y={y+height/2} fill="#fff" fontSize={11}>
             {name}
           </text>
         </g>
@@ -237,26 +243,23 @@ export default function App() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-          {data.map((value, i) => (
-            <p key={i}>{String(value)}</p>
-          ))}
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
+        {data.map((value, i) => (
+        <p key={i}>{String(value)}</p>
+        ))}
+
+      <div style={{ margin: '20px', backgroundColor: '#fff', padding: '10px' }}>
         <Treemap
-          width={400}
-          height={200}
+          width={1000}
+          height={500}
           data={tree_data}
           dataKey="size"
+          nameKey="name"
           stroke="#fff"
           fill="#8884d8"
           content={<CustomizedContent colors={COLORS} />}
+          isAnimationActive={false}
         />
+      </div>
       </main>
     </div>
   );
