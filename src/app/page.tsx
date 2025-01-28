@@ -10,7 +10,11 @@ import { useEffect } from "react";
 import { WeaviateField } from "weaviate-client";
 import { useState } from "react";
 
-const tree_data = [
+
+import { TreeData } from "../models/vis-data";
+
+
+const tree_data: TreeData = [
   {
     name: "axis",
     children: [
