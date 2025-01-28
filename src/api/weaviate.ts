@@ -22,11 +22,24 @@ export const getText = async (query: string) => {
 
   client.close();
 
-  const text_tree = response.objects.map(item  => ({
-    text: item.properties.text,
+  const queried_data = response.objects.map(item  => ({
+    subject: item.properties.subject,
     paragraph_idx: item.properties.paragraph_idx, 
+    text: item.properties.text,
     certainty: item.metadata.certainty
   }));
+
+  // Aggregate into a list of dictionaries
+  const text_tree = Object.values(
+    queried_data.reduce((acc, item) => {
+      if (!acc[item.subject]) {
+        // If the name doesn't exist, initialize it with an empty list
+        acc[item.subject] = { name: item.subject, children: [] };
+      }
+    acc[item.subject].children.push({ name: item.text, size: item.certainty }); // Add the item to the children list
+    return acc;
+    }, {} as Record<string, { name: string; children: { name: string; size: number }[] }>)
+  );
 
   return text_tree;
 };
