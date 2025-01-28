@@ -237,7 +237,6 @@ class CustomizedContent extends PureComponent {
 export default function App() {
 
   const query = "Data literacy";
-  // let results: string[] = [];
 
   const [data, setData] = useState<WeaviateField[]>([]);
   useEffect(() => {
@@ -247,9 +246,9 @@ export default function App() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        {data.map((value, i) => (
-        <p key={i}>{String(value)}</p>
-        ))}
+      {data.map((item, i) => (
+            <p key={i}>{`${String(item.certainty)}, ${String(item.text)}`}</p>
+          ))}
 
       <div style={{ margin: '20px', backgroundColor: '#fff', padding: '10px' }}>
         <Treemap

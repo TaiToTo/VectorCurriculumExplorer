@@ -1,6 +1,7 @@
 "use server";
 
 import weaviate from "weaviate-client";
+import { TreeData } from "../models/vis-data";
 
 const connectWeaviate = async () =>
   await weaviate.connectToWeaviateCloud(process.env.WEAVIATE_URL || "", {
@@ -16,9 +17,20 @@ export const getText = async (query: string) => {
   const collections = client.collections.get("CurriculumDemo");
   const response = await collections.query.nearText(query, {
     limit: 5,
+    returnMetadata: ['certainty']
   });
 
   client.close();
 
-  return response.objects.map(({ properties }) => properties.text);
+  const text_tree = response.objects.map(item  => ({
+    text: item.properties.text,
+    paragraph_idx: item.properties.paragraph_idx, 
+    certainty: item.metadata.certainty
+  }));
+
+  return text_tree;
 };
+
+
+
+
