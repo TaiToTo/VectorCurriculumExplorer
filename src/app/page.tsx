@@ -6,44 +6,13 @@ import { getText } from "@/api/weaviate";
 import React, { PureComponent } from "react";
 import { Treemap } from "recharts";
 
+
 import { useEffect } from "react";
 import { WeaviateField } from "weaviate-client";
 import { useState } from "react";
 
 
-import { TreeData } from "../models/vis-data";
 
-
-const tree_data: TreeData = [
-  {
-    name: "axis",
-    children: [
-      { name: "Axes", size: 1302 },
-      { name: "Axis", size: 24593 },
-      { name: "AxisGridLine", size: 652 },
-      { name: "AxisLabel", size: 636 },
-      { name: "CartesianAxes", size: 6703 },
-    ],
-  },
-
-  {
-    name: "controls",
-    children: [
-      { name: "AnchorControl", size: 2138 },
-      { name: "ClickControl", size: 3824 },
-      { name: "Control", size: 1353 },
-      { name: "ControlList", size: 4665 },
-      { name: "DragControl", size: 2649 },
-      { name: "ExpandControl", size: 2832 },
-      { name: "HoverControl", size: 4896 },
-      { name: "IControl", size: 763 },
-      { name: "PanZoomControl", size: 5222 },
-      { name: "SelectionControl", size: 7862 },
-      { name: "TooltipControl", size: 8435 },
-    ],
-  },
-
-];
 
 const COLORS = [
   "#8889DD",
@@ -141,7 +110,6 @@ export default function App() {
     getText(query).then((data) => setData(data));
   }, []);
 
-  console.log()
 
   return (
     <div className={styles.page}>
@@ -151,19 +119,21 @@ export default function App() {
           ))
       } */}
 
-      <div style={{ margin: '20px', backgroundColor: '#fff', padding: '10px' }}>
-        <Treemap
-          width={1000}
-          height={500}
-          data={tree_data}
-          dataKey="size"
-          nameKey="name"
-          stroke="#fff"
-          fill="#8884d8"
-          content={<CustomizedContent colors={COLORS} />}
-          isAnimationActive={false}
-        />
-      </div>
+      {data.length > 0 && (
+        <div style={{ margin: '20px', backgroundColor: '#fff', padding: '10px' }}>
+          <Treemap
+        width={1000}
+        height={500}
+        data={data}
+        dataKey="size"
+        nameKey="name"
+        stroke="#fff"
+        fill="#8884d8"
+        content={<CustomizedContent colors={COLORS} />}
+        isAnimationActive={false}
+          />
+        </div>
+      )}
       </main>
     </div>
   );
