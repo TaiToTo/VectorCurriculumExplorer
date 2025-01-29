@@ -29,6 +29,21 @@ const COLORS = [
   "#FF8042",
 ];
 
+const subject_color_map ={
+  "language_and_literature": "red",
+  "foreign_languages": "purple",
+  "mathematics": "blue",
+  "natural_science": "green",
+  "social_studies": "orange",
+  "art": "pink",
+  "technology": "cyan",
+  "physical_education": "yellow",
+  "religious_studies": "brown",
+  "informatics": "teal",
+  "career_education": "magenta",
+  "entrepreneurship_studies": "lime"
+}
+
 class CustomizedContent extends PureComponent {
   render() {
     const {
@@ -55,7 +70,7 @@ class CustomizedContent extends PureComponent {
           style={{
             fill:
               depth < 2
-                ? colors[Math.floor((index / root.children.length) * 6)]
+                ? subject_color_map[name]
                 : "#ffffff00",
             stroke: "#fff",
             strokeWidth: 2 / (depth + 1e-10),
