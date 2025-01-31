@@ -4,7 +4,17 @@ import styles from "./page.module.css";
 
 import { getText } from "@/api/weaviate";
 import React, { PureComponent } from "react";
-import { Treemap } from "recharts";
+import {
+  Treemap,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  Cell
+} from "recharts";
 
 
 import { useEffect } from "react";
@@ -14,19 +24,15 @@ import { useState } from "react";
 
 
 
-const COLORS = [
-  "#8889DD",
-  "#9597E4",
-  "#8DC77B",
-  "#A5D297",
-  "#E2CF45",
-  "#F8C12D",
-  "#FF8042",
-  "#FFBB28",
-  "#FF8042",
-  "#00C49F",
-  "#FFBB28",
-  "#FF8042",
+
+const colorsProd = ["#8A8256", "#1A3D5C", "#FF5574"];
+const dataProd = [
+  { name: "Géothermie", value: 10, typeEnergie: 0 },
+  { name: "Solaire thermique", value: 10, typeEnergie: 0 },
+  { name: "Photovoltaïque toiture", value: 10, typeEnergie: 0 },
+  { name: "Ferme solaire", value: 10, typeEnergie: 0 },
+  { name: "Biomasse solaire", value: 10, typeEnergie: 0 },
+  { name: "Eolien terrestre", value: 10, typeEnergie: 0 }
 ];
 
 const subject_color_map ={
@@ -126,26 +132,51 @@ export default function App() {
   }, []);
 
 
+  const [queried_data, tree_data] = data;
+
+  console.log(tree_data);
+
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-      {/* {data.map((item, i) => (
-            <p key={i}>{`${String(item.certainty)}, ${String(item.text)}`}</p>
-          ))
-      } */}
-
       {data.length > 0 && (
-        <div style={{ margin: '20px', backgroundColor: '#fff', padding: '10px' }}>
+        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', margin: '20px', backgroundColor: '#fff', padding: '10px' }}>
+        <BarChart
+          width={500}
+          height={500}
+          data={queried_data}
+          layout="vertical"
+          margin={{
+          top: 5,
+          right: 30,
+          left: 20,
+          bottom: 5
+          }}
+        >
+          {/* <CartesianGrid strokeDasharray="3 3" />
+          <XAxis type="number" unit="kWh"  />
+          <YAxis type="category" width={250} dataKey="name" /> */}
+          <Tooltip />
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis type="number" />
+            <YAxis type="category" width={250} dataKey="text" />
+            <Tooltip />
+            <Bar dataKey="certainty" unit="kWh">
+              {queried_data.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={subject_color_map[entry.subject]} />
+              ))}
+            </Bar>
+          </BarChart>
           <Treemap
-        width={1000}
-        height={500}
-        data={data}
-        dataKey="size"
-        nameKey="name"
-        stroke="#fff"
-        fill="#8884d8"
-        content={<CustomizedContent colors={COLORS} />}
-        isAnimationActive={false}
+            width={1000}
+            height={500}
+            data={tree_data}
+            dataKey="size"
+            nameKey="name"
+            stroke="#fff"
+            fill="#8884d8"
+            content={<CustomizedContent/>}
+            isAnimationActive={false}
           />
         </div>
       )}

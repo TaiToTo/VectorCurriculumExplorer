@@ -16,7 +16,7 @@ export const getText = async (query: string) => {
 
   const collections = client.collections.get("CurriculumDemo");
   const response = await collections.query.nearText(query, {
-    limit: 100,
+    limit: 30,
     returnMetadata: ['certainty']
   });
 
@@ -29,9 +29,8 @@ export const getText = async (query: string) => {
     certainty: item.metadata.certainty
   }));
 
-
   // Aggregate into a list of dictionaries
-  const text_tree = Object.values(
+  const tree_data = Object.values(
     queried_data.reduce((acc, item) => {
       if (!acc[item.subject]) {
         // If the name doesn't exist, initialize it with an empty list
@@ -42,7 +41,8 @@ export const getText = async (query: string) => {
     }, {} as Record<string, { name: string; children: { name: string; size: number }[] }>)
   );
 
-  return text_tree;
+
+  return [queried_data, tree_data];
 };
 
 
