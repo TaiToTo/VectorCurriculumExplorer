@@ -21,20 +21,6 @@ import { useEffect } from "react";
 import { WeaviateField } from "weaviate-client";
 import { useState } from "react";
 
-
-
-
-
-const colorsProd = ["#8A8256", "#1A3D5C", "#FF5574"];
-const dataProd = [
-  { name: "Géothermie", value: 10, typeEnergie: 0 },
-  { name: "Solaire thermique", value: 10, typeEnergie: 0 },
-  { name: "Photovoltaïque toiture", value: 10, typeEnergie: 0 },
-  { name: "Ferme solaire", value: 10, typeEnergie: 0 },
-  { name: "Biomasse solaire", value: 10, typeEnergie: 0 },
-  { name: "Eolien terrestre", value: 10, typeEnergie: 0 }
-];
-
 const subject_color_map ={
   "language_and_literature": "red",
   "foreign_languages": "purple",
