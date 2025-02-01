@@ -11,7 +11,7 @@ const connectWeaviate = async () =>
     },
   });
 
-export const getText = async (query: string, num_text_queried: number) => {
+export const queryTexts = async (query: string, num_text_queried: number) => {
   const client = await connectWeaviate();
 
   const collections = client.collections.get("CurriculumDemo");

@@ -2,7 +2,7 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 
-import { getText } from "@/api/weaviate";
+import { queryTexts } from "@/api/weaviate";
 import React, { PureComponent } from "react";
 import {
   Treemap,
@@ -114,7 +114,7 @@ export default function App() {
 
   const [data, setData] = useState<WeaviateField[]>([]);
   useEffect(() => {
-    getText(query, sliderValue).then((data) => setData(data));
+    queryTexts(query, sliderValue).then((data) => setData(data));
   }, []);
 
   const [sliderValue, setSliderValue] = useState<number>(30); // Initial value set to 50
@@ -137,7 +137,7 @@ export default function App() {
           onChange={(e) => {
         const newValue = Number(e.target.value);
         setSliderValue(newValue);
-        getText(query, newValue).then((data) => setData(data));
+        queryTexts(query, newValue).then((data) => setData(data));
           }}
           style={{ marginBottom: '20px' }}
         />
