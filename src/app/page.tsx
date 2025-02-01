@@ -114,58 +114,71 @@ export default function App() {
 
   const [data, setData] = useState<WeaviateField[]>([]);
   useEffect(() => {
-    getText(query).then((data) => setData(data));
+    getText(query, sliderValue).then((data) => setData(data));
   }, []);
+
+  const [sliderValue, setSliderValue] = useState<number>(30); // Initial value set to 50
 
 
   const [queried_data, tree_data] = data;
+
+
 
   console.log(tree_data);
 
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-      {data.length > 0 && (
-        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', margin: '20px', backgroundColor: '#fff', padding: '10px' }}>
+        <input
+          type="range"
+          min="1"
+          max="100"
+          value={sliderValue}
+          onChange={(e) => {
+        const newValue = Number(e.target.value);
+        setSliderValue(newValue);
+        getText(query, newValue).then((data) => setData(data));
+          }}
+          style={{ marginBottom: '20px' }}
+        />
+        {data.length > 0 && (
+          <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', margin: '20px', backgroundColor: '#fff', padding: '10px' }}>
         <BarChart
           width={500}
           height={500}
           data={queried_data}
           layout="vertical"
           margin={{
-          top: 5,
-          right: 30,
-          left: 20,
-          bottom: 5
+            top: 5,
+            right: 30,
+            left: 20,
+            bottom: 5
           }}
         >
-          {/* <CartesianGrid strokeDasharray="3 3" />
-          <XAxis type="number" unit="kWh"  />
-          <YAxis type="category" width={250} dataKey="name" /> */}
           <Tooltip />
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis type="number" />
-            <YAxis type="category" width={250} dataKey="text" />
-            <Tooltip />
-            <Bar dataKey="certainty" unit="kWh">
-              {queried_data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={subject_color_map[entry.subject]} />
-              ))}
-            </Bar>
-          </BarChart>
-          <Treemap
-            width={1000}
-            height={500}
-            data={tree_data}
-            dataKey="size"
-            nameKey="name"
-            stroke="#fff"
-            fill="#8884d8"
-            content={<CustomizedContent/>}
-            isAnimationActive={false}
-          />
-        </div>
-      )}
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis type="number" />
+          <YAxis type="category" width={250} dataKey="text" />
+          <Tooltip />
+          <Bar dataKey="certainty" unit="kWh">
+            {queried_data.map((entry, index) => (
+          <Cell key={`cell-${index}`} fill={subject_color_map[entry.subject]} />
+            ))}
+          </Bar>
+        </BarChart>
+        <Treemap
+          width={1000}
+          height={500}
+          data={tree_data}
+          dataKey="size"
+          nameKey="name"
+          stroke="#fff"
+          fill="#8884d8"
+          content={<CustomizedContent />}
+          isAnimationActive={false}
+        />
+          </div>
+        )}
       </main>
     </div>
   );
