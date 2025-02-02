@@ -2,7 +2,7 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 
-import { getText } from "@/api/weaviate";
+import { queryTexts, executeRAG } from "@/api/weaviate";
 import React, { PureComponent } from "react";
 import {
   Treemap,
@@ -112,34 +112,38 @@ export default function App() {
 
   const query = "Data literacy";
 
-  const [data, setData] = useState<WeaviateField[]>([]);
-  useEffect(() => {
-    getText(query, sliderValue).then((data) => setData(data));
-  }, []);
-
   const [sliderValue, setSliderValue] = useState<number>(30); // Initial value set to 50
 
+  const [data, setData] = useState<WeaviateField[]>([]);
+  useEffect(() => {
+    queryTexts(query, sliderValue).then((data) => setData(data));
+  }, []);
+
+
+  const [prompt, setPrompt] = useState<string>("");
+  const [RAGdata, setRAGData] = useState<WeaviateField[]>([]);
+  useEffect(() => {
+    executeRAG(prompt, 3).then((RAGdata) => setRAGData(RAGdata));
+  }, []);
 
   const [queried_data, tree_data] = data;
+  const [generated_answer, RAG_tree_data] = RAGdata;
 
-
-
-  console.log(tree_data);
 
   return (
     <div className={styles.page}>
       <main className={styles.main}>
         <input
-          type="range"
-          min="1"
-          max="100"
-          value={sliderValue}
-          onChange={(e) => {
-        const newValue = Number(e.target.value);
-        setSliderValue(newValue);
-        getText(query, newValue).then((data) => setData(data));
-          }}
-          style={{ marginBottom: '20px' }}
+            type="range"
+            min="1"
+            max="100"
+            value={sliderValue}
+            onChange={(e) => {
+              const newValue = Number(e.target.value);
+              setSliderValue(newValue);
+              queryTexts(query, newValue).then((data) => setData(data));
+            }}
+            style={{ marginBottom: '20px' }}
         />
         {data.length > 0 && (
           <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', margin: '20px', backgroundColor: '#fff', padding: '10px' }}>
@@ -177,6 +181,43 @@ export default function App() {
           content={<CustomizedContent />}
           isAnimationActive={false}
         />
+          </div>
+        )}
+        <h1>RAG</h1>
+        <input
+          type="text"
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+          placeholder="Enter your prompt"
+          style={{ marginBottom: '20px', width: '100%' }}
+        />
+        <button 
+          onClick={() => {
+            executeRAG(prompt, 10).then((RAGdata) => setRAGData(RAGdata));
+          }} 
+          // disabled={loading}
+        >
+          Generate
+        </button>
+        {generated_answer && (
+          <div style={{ marginTop: '20px', backgroundColor: '#fff', padding: '10px' }}>
+            <h2>Generated Answer</h2>
+            <p>{generated_answer}</p>
+          </div>
+        )}
+        {RAGdata.length > 0 && (
+          <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', margin: '20px', backgroundColor: '#fff', padding: '10px' }}>
+            <Treemap
+              width={750}
+              height={375}
+              data={RAG_tree_data}
+              dataKey="size"
+              nameKey="name"
+              stroke="#fff"
+              fill="#8884d8"
+              content={<CustomizedContent />}
+              isAnimationActive={false}
+            />
           </div>
         )}
       </main>
